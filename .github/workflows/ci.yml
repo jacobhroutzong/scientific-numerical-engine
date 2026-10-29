@@ -1,0 +1,33 @@
+name: Native and WebAssembly checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  native:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: google/googletest
+          ref: 52eb8108c5bdec04579160ae17225d66034bd723
+          path: .deps/googletest
+      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSCE_GTEST_SOURCE="${{ github.workspace }}/.deps/googletest"
+      - run: cmake --build build --config Release
+      - run: ctest --test-dir build -C Release --output-on-failure
+  wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: emscripten-core/emsdk
+          ref: d7b4130688bfa348392b921ab04015aa15c4f154
+          path: .deps/emsdk
+      - run: .deps/emsdk/emsdk install 6.0.13
+      - run: .deps/emsdk/emsdk activate --embedded 6.0.13
+      - run: python3 tools/build_wasm.py --emsdk .deps/emsdk --engine numerical --source . --out build-wasm
+      - run: node tests/browser-smoke.mjs build-wasm

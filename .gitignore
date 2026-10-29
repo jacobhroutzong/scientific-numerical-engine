@@ -1,0 +1,8 @@
+/build*/
+/.deps/
+/.wasm-tmp/
+/__pycache__/
+*.exe
+*.dll
+*.obj
+*.wasm

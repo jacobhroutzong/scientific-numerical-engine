@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+const directory=process.argv[2];
+if(!directory)throw new Error('Supply WASM output directory');
+const engine=await(await import(pathToFileURL(resolve(directory,'numerical.mjs')))).default();
+const result=JSON.parse(engine.solve('2 1 1 2 3 4 5 11'));
+assert.equal(result.ok,true);assert.ok(Math.abs(result.x[0][0]-1)<1e-13);assert.ok(Math.abs(result.x[1][0]-2)<1e-13);
+assert.deepEqual(result.pivots,[1,1]);assert.ok(result.backwardError<1e-14);
+for(const input of ['2 1 1 2 2 4 5 10','17 1','1 1 nan 1','1 1 1 1 extra'])assert.equal(JSON.parse(engine.solve(input)).ok,false);
+console.log('numerical WASM smoke tests passed');

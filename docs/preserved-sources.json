@@ -1,0 +1,46 @@
+{
+  "include/sce/lu.hpp": {
+    "sha256": "33a2e19b7d1e6f43fc3b2136e72ec655deb5fa6563e762d2a18867fdeee1aba8",
+    "matchesOriginal": true
+  },
+  "include/sce/solve.hpp": {
+    "sha256": "4b2565d265e4cddbbc48007adf1b65d185366af0defa78d2c506420c63b010b8",
+    "matchesOriginal": true
+  },
+  "src/lu.cpp": {
+    "sha256": "d9fb0b77d02e3086be0c73b422787dbc72b90c6d67682aed2e7dfe8123648fba",
+    "matchesOriginal": true
+  },
+  "src/solve.cpp": {
+    "sha256": "331064d4dff2158e51294fde55df1877a812b9d8305d4c842de88acf8d0dd54b",
+    "matchesOriginal": true
+  },
+  "tests/lu_tests.cpp": {
+    "sha256": "edc86e75fe26789b42636a21bdf18e06ca5dfd00445ccfa1397599c0e7965101",
+    "matchesOriginal": true
+  },
+  "tests/numpy_reference.py": {
+    "sha256": "5f1e03a2ad29718c4da7fc3d16b319380969b99736aa3814617027b4349336b2",
+    "matchesOriginal": true
+  },
+  "tests/solve_reference.py": {
+    "sha256": "ad2ace14fe398401fdd169a02f0cc45828df9fa96cf44069b9b31f0bd17d1704",
+    "matchesOriginal": true
+  },
+  "tests/solve_tests.cpp": {
+    "sha256": "5a3fef605db5c8cc26cf1a1de86d84b6b3087135edf08dcf690a132df1ba8085",
+    "matchesOriginal": true
+  },
+  "tools/lu_probe.cpp": {
+    "sha256": "e9564e0b7e3fdad8f39496a944339bb552c0723b291520d58bcc993048570b47",
+    "matchesOriginal": true
+  },
+  "tools/record_example.cpp": {
+    "sha256": "1d778addea5edcf83e3f3d641055c8144024098d4eb0abd6d541ace05e71c425",
+    "matchesOriginal": true
+  },
+  "tools/solve_probe.cpp": {
+    "sha256": "2485ad6495297c63628323a7254550d92aa5c48e4d35b52028f477fd9f9f239b",
+    "matchesOriginal": true
+  }
+}
