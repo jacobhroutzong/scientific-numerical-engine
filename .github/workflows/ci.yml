@@ -15,7 +15,11 @@ jobs:
           repository: google/googletest
           ref: 52eb8108c5bdec04579160ae17225d66034bd723
           path: .deps/googletest
-      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSCE_GTEST_SOURCE="${{ github.workspace }}/.deps/googletest"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install numpy==2.3.5
+      - run: python tools/configure_ci.py
       - run: cmake --build build --config Release
       - run: ctest --test-dir build -C Release --output-on-failure
   wasm:
