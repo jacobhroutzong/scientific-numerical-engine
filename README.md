@@ -1,5 +1,25 @@
 # Numerical Computing Engine
 
+## Phase 5 checked least squares
+
+Native-only `sce::least_squares` extends the existing thin Householder QR to
+full-column-rank square/overdetermined systems with multiple RHS. It returns
+explicit fit diagnostics and an optional estimate of cond_inf(R), with a
+documented unpivoted rank-rejection policy and checked arithmetic. See
+[contract and limitations](docs/phase5-least-squares.md) and
+[reproducible benchmarks](benchmarks/README.md). The solver rejects nonzero
+subnormal active inputs because the QR calculation can lose significant
+precision at that scale. The native and reference suite has 29 entries
+(26 GoogleTest and 3 NumPy reference tests).
+
+Configure optional references with `-DSCE_REFERENCE_PYTHON=/path/to/python`
+using an environment containing NumPy2.3.5. New probe/reference commands are
+documented above; no configure-time downloads are added. CI runs both native
+platforms with the independent references and preserves the existing WASM smoke.
+
+The following sections retain the Phase4 baseline and its dated test counts;
+the Phase 5 counts above describe the current native API.
+
 C++20 recursive LU with partial pivoting, an independent checked multiple-RHS triangular solver, and a separate independent Householder QR library. Existing LU/solve source is preserved from the validated Scientific Computing workspace. No BLAS/LAPACK runtime dependency; scalar kernels favor clarity over throughput.
 
 ## Build and test
