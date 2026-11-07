@@ -25,8 +25,10 @@ struct LeastSquaresResult {
   std::optional<double> r_condition_inf;
 };
 // Full-column-rank policy; 1<=n<=m<=256, 1<=nrhs<=16, immutable inputs.
+// Active entries must be finite and either zero or normal.
 // Throws invalid_argument (boundary), RankDeficient (diagonal threshold),
-// overflow_error (nonfinite arithmetic). See docs/phase5-least-squares.md.
+// underflow_error (subnormal QR diagonal), or overflow_error (nonfinite
+// arithmetic). See docs/phase5-least-squares.md.
 LeastSquaresResult least_squares(std::span<const double> a, index_type m,
                                  index_type n, index_type lda,
                                  std::span<const double> b, index_type nrhs,

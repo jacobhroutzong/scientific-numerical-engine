@@ -4,10 +4,18 @@ Native-only extension of the existing Householder QR. Preserve LU, solve, QR,
 browser adapters, license and Phase4 artifacts. Original authored mathematics;
 no new REA findings or original-binary execution.
 
-Contract before implementation: finite real binary64, column-major A/B with
-validated leading dimensions; 1 <= n <= m <=256 and 1..16 RHS. Solve each RHS's
+The solver accepts real binary64, column-major A/B with validated leading
+dimensions. Active entries must be finite and either zero or normal. The shape
+limits are 1 <= n <= m <=256 and 1..16 RHS. Solve each RHS's
 Euclidean least-squares problem by existing thin QR, Q^T B, checked back solve.
 Inputs are immutable. Underdetermined/minimum-norm problems are unsupported.
+
+Subnormal active entries in A or B throw `std::invalid_argument` before
+factorization. A subnormal R diagonal produced during factorization throws
+`std::underflow_error`. The existing QR implementation rounds its reflector norm
+at that scale, which can corrupt the solution even for a well-conditioned
+system. Padding is outside these checks. The regression covers A = B = [d, d]
+for the smallest positive binary64 value d, plus the smallest normal input.
 
 Default rejection tolerance is epsilon*max(m,n); reject if any |Rii|/max|R|
 is <= tolerance. A caller may supply a finite tolerance in[0,1). This unpivoted

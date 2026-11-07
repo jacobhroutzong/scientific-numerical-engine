@@ -57,6 +57,8 @@ int main() {
       std::cout << ",\"nanoseconds_per_call\":" << elapsed << "}\n";
     } catch (const sce::RankDeficient &) {
       std::cout << "{\"status\":\"rank_rejected\"}\n";
+    } catch (const std::underflow_error &) {
+      std::cout << "{\"status\":\"underflow\"}\n";
     } catch (const std::overflow_error &) {
       std::cout << "{\"status\":\"overflow\"}\n";
     } catch (const std::invalid_argument &) {

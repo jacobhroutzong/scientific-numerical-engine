@@ -22,10 +22,15 @@ void validate(std::span<const double> v, int rows, int columns, int ld) {
   if (v.size() < at(rows - 1, columns - 1, ld) + 1)
     throw std::invalid_argument("Insufficient least-squares storage");
   for (int j = 0; j < columns; ++j)
-    for (int i = 0; i < rows; ++i)
-      if (!std::isfinite(v[at(i, j, ld)]))
+    for (int i = 0; i < rows; ++i) {
+      const double value = v[at(i, j, ld)];
+      if (!std::isfinite(value))
         throw std::invalid_argument(
             "Least squares requires finite active entries");
+      if (std::fpclassify(value) == FP_SUBNORMAL)
+        throw std::invalid_argument(
+            "Least squares requires zero or normal active entries");
+    }
 }
 void back_solve(const std::vector<double> &r, int n, std::span<double> x) {
   for (int i = n - 1; i >= 0; --i) {
@@ -76,7 +81,10 @@ LeastSquaresResult least_squares(std::span<const double> a, index_type m,
   if (scale == 0)
     throw RankDeficient("Zero QR triangular factor");
   for (int i = 0; i < n; ++i) {
-    const double relative = std::abs(qr.r[at(i, i, n)]) / scale;
+    const double diagonal = std::abs(qr.r[at(i, i, n)]);
+    if (std::fpclassify(diagonal) == FP_SUBNORMAL)
+      throw std::underflow_error("Least-squares QR diagonal is subnormal");
+    const double relative = diagonal / scale;
     minimum = std::min(minimum, relative);
     if (relative <= tolerance)
       throw RankDeficient(

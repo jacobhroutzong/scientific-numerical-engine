@@ -59,3 +59,24 @@ TEST(LeastSquares, InvalidInputsAndOverflow) {
                                   std::vector<double>{1e300}, 1, 1),
                std::overflow_error);
 }
+
+TEST(LeastSquares, RejectsSubnormalActiveEntries) {
+  const double tiny = std::numeric_limits<double>::denorm_min();
+  const double smallest_normal = std::numeric_limits<double>::min();
+  const std::vector<double> normal{smallest_normal, smallest_normal};
+  const std::vector<double> subnormal{tiny, tiny};
+  EXPECT_THROW(sce::least_squares(subnormal, 2, 1, 2, subnormal, 1, 2),
+               std::invalid_argument);
+  EXPECT_THROW(sce::least_squares(subnormal, 2, 1, 2, normal, 1, 2),
+               std::invalid_argument);
+  EXPECT_THROW(sce::least_squares(normal, 2, 1, 2, subnormal, 1, 2),
+               std::invalid_argument);
+  const auto result = sce::least_squares(normal, 2, 1, 2, normal, 1, 2);
+  EXPECT_NEAR(result.x[0], 1, 1e-14);
+
+  // Normal input entries can still yield a subnormal QR diagonal.
+  const std::vector<double> small_diagonal{1, 1, smallest_normal, 3e-308};
+  EXPECT_THROW(sce::least_squares(small_diagonal, 2, 2, 2,
+                                  std::vector<double>{1, 1}, 1, 2, {0., false}),
+               std::underflow_error);
+}
